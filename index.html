@@ -120,6 +120,29 @@
     #no { background: #ffe8f1; color: #5b1731; }
     #msg { margin-top: 18px; font-weight: 600; font-size: 18px; }
 
+    .heart-burst {
+      position: fixed;
+      font-size: clamp(18px, 2.8vw, 36px);
+      pointer-events: none;
+      z-index: 20;
+      animation: pop-heart 2s ease-out forwards;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes pop-heart {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.4);
+      }
+      15% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2);
+      }
+    }
+
     @media (max-width: 920px) {
       .layout {
         flex-direction: column;
@@ -152,8 +175,6 @@
 
     <div class="card">
       <h1>Willst du mein Valentinstag-Date sein? 💘</h1>
-      <p>Nur eine kleine Frage...</p>
-
       <div class="btns">
         <button id="yes">Ja 😍</button>
         <button id="no">Nein 🙈</button>
@@ -243,10 +264,32 @@
 
     document.querySelectorAll(".polaroid").forEach(setupPolaroid);
 
+    const showHeartBurst = () => {
+      const heartCount = 55;
+
+      for (let i = 0; i < heartCount; i += 1) {
+        const heart = document.createElement("span");
+        heart.className = "heart-burst";
+        heart.textContent = "💖";
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.top = `${Math.random() * 100}vh`;
+
+        const dx = (Math.random() - 0.5) * 280;
+        const dy = (Math.random() - 0.5) * 280;
+        heart.style.setProperty("--dx", `${dx}px`);
+        heart.style.setProperty("--dy", `${dy}px`);
+        heart.style.animationDelay = `${Math.random() * 0.2}s`;
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 2000);
+      }
+    };
+
     yes.addEventListener("click", () => {
       msg.textContent = "Ich freue mich schon auf unser Date. Hiermit lade ich dich am Samstag auf 18 Uhr in die Losteria ein. ❤️";
       no.style.display = "none";
       yes.textContent = "💖";
+      showHeartBurst();
     });
 
     no.addEventListener("click", () => {
